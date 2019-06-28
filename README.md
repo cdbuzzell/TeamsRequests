@@ -19,14 +19,14 @@ The following custom lists in SharePoint are used in the sample Flow and can be 
 ### Teams Templates
 Create teams in Microsoft Teams to act as your templates, then store references to those templates in this simple custom list to be chosen from when someone requests a new Team. This list will be used as a lookup on the Teams Requests list. You can copy/paste the TeamID from the Teams Admin Center.
 ![TeamsTemplates list](Images/List-TeamsTemplates.gif)
-![TeamsTemplates list settings](Images/List-TeamsTemplates-settings.gif)
+![TeamsTemplates list settings](Images/List-TeamsTemplates-Settings.gif)
 ### Business Units
 This custom list (with no additional custom fields) is entrirely optional and just an example of the type of extra information you can collect and store to meet your governance needs. This list will be used as a lookup on the Teams Requests list. 
 ![Business Units list](Images/List-BusinessUnits.gif)
 ### Teams Requests
 This custom list is where people will submit their requests. You can certainly make a PowerApp on top of this list for people to use.
 ![Teams Requests list](Images/List-TeamsRequests.gif)
-![Teams Requests list settings](Images/List-TeamsRequests-settings.gif)
+![Teams Requests list settings](Images/List-TeamsRequests-Settings.gif)
 
 ## Import Microsoft Flow
 1. Browse to https://flow.microsoft.com
