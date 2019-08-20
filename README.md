@@ -12,7 +12,7 @@ Employees will fill out a request form in SharePoint Online (or in PowerApps, sh
 3. Copy the **Application (client) ID** and the **Directory (tenant) ID** from the Overview page into OneNote/notepad
 4. Click on **Certificates & secrets** and create a new client secret (copy/paste it into OneNote/notepad)
 ![AAD secret](Images/AAD-secret.jpg)
-5. Click on **API permissions** and add the following permissions for Microsoft Graph (Application, not delegated): Group.ReadWrite.All, User.ReadWrite.All
+5. Click on **API permissions** and add the following permissions for Microsoft Graph (Application, not delegated): Group.ReadWrite.All, User.ReadWrite.All, Directory.ReadWrite.All
 ![AAD graph](Images/AAD-Graph.jpg)
 ![AAD permissions](Images/AAD-Permissions.jpg)
 6. Click the **Grant admin consent for [tenant]** button
