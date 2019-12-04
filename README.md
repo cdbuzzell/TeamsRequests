@@ -9,13 +9,13 @@ Employees will fill out a request form in SharePoint Online (or in PowerApps, sh
 1. Browse to https://aad.portal.azure.com
 2. Register a new application: https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
 ![AAD app registration](Images/AAD-AppReg.jpg)
-3. Copy the **Application (client) ID** and the **Directory (tenant) ID** from the Overview page into OneNote/notepad
-4. Click on **Certificates & secrets** and create a new client secret (copy/paste it into OneNote/notepad)
+3. Copy the `Application (client) ID` and the `Directory (tenant) ID` from the Overview page into OneNote/notepad
+4. Click on `Certificates & secrets` and create a new client secret (copy/paste it into OneNote/notepad)
 ![AAD secret](Images/AAD-secret.jpg)
-5. Click on **API permissions** and add the following permissions for Microsoft Graph (Application, not delegated): Group.ReadWrite.All, User.ReadWrite.All, Directory.ReadWrite.All
+5. Click on `API permissions` and add the following permissions for Microsoft Graph (Application, not delegated): **Group.ReadWrite.All**, **User.ReadWrite.All**, **Directory.ReadWrite.All**
 ![AAD graph](Images/AAD-Graph.jpg)
 ![AAD permissions](Images/AAD-Permissions.jpg)
-6. Click the **Grant admin consent for [tenant]** button
+6. Click the `Grant admin consent for [tenant]` button
 
 ## Create SharePoint Online lists
 The following custom lists in SharePoint are used in the sample Flow and can be modified/omitted to fit your needs. Any alterations may require updates to get the Flow to work, depending on the change.
@@ -33,8 +33,8 @@ This custom list is where people will submit their requests. You can certainly m
 
 ## Import Microsoft Flow
 1. Browse to https://flow.microsoft.com
-2. Click on **My flows**
-3. Click **Import**
+2. Click on `My flows`
+3. Click `Import`
 ![Flow import](Images/Flow-Import.jpg)
 4. Download [TeamsCreationGovernance.zip](/TeamsCreationGovernance.zip) and upload your copy of this file
 4. After importing, edit the Flow to plug in your IDs for the AAD Application, your SharePoint Online site and lists, etc.
