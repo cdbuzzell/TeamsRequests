@@ -54,7 +54,7 @@ This custom list is where people will submit their requests. You can certainly m
 
 5. Select the Site where you created the lists above and select the List Name to: `Teams Requests`
 
-![Flow: trigger](Images/Flow-1-Trigger.png)
+![Flow: trigger](Images/Flow-1-trigger.png)
 
 6. Add 3 new steps using the `Initialize variable [Variables]` action for each, setting the Values to the IDs you copied when you created your AAD App Registration above
 
