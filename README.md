@@ -8,7 +8,7 @@ Employees will fill out a request form in SharePoint Online (or in PowerApps, sh
 ## Steps
 1. [Register an Application in Azure Active Directory](#register-an-application-in-azure-active-directory)
 2. [Create SharePoint Online Custom Lists](#create-sharepoint-online-lists)
-3. [Create a Power Automate flow](#create-power-automate-flow)
+3. [Create a Power Automate flow](#create-power-automate-flow) (Under construction)
 4. or [Import the flow](#or-import-the-power-automate-flow)
 5. [Create a PowerApp](#create-powerapp)
 6. [Pin the app to the sidebar in Microsoft Teams](#publish-powerapp-to-teams-and-pin)
