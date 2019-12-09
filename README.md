@@ -5,7 +5,7 @@ Employees will fill out a request form in SharePoint Online (or in PowerApps, sh
 
 ![Process Diagram](Images/ProcessDiagram.png)
 
-Steps
+##Steps
 1. [Register an Application in Azure Active Directory](#register-an-application-in-azure-active-directory)
 2. [Create SharePoint Online Custom Lists](#create-sharepoint-online-lists)
 3. [Create a Power Automate flow](#create-power-automate-flow)
@@ -147,9 +147,10 @@ Body:
 }
 ```
 
-![Flow: clone team](Images/Flow-7-clone.png)
+![Flow: clone team](Images/Flow-7-Clone.png)
 
 TODO: finish these instructions (I'm working on it)
+
 13. 
 
 
