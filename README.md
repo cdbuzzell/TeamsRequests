@@ -40,7 +40,7 @@ This custom list is where people will submit their requests. You can certainly m
 ![Teams Requests list settings](Images/List-TeamsRequests-Settings.gif)
 
 ## Create Power Automate flow
-### Or you can import the flow in the following step and update the various actions
+*Or you can import the flow in the [step after this](#or-import-the-power-automate-flow) and update the various actions*
 
 1. Browse to https://flow.microsoft.com
 
