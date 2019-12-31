@@ -8,8 +8,8 @@ Employees will fill out a request form in SharePoint Online (or in PowerApps, sh
 ## Steps
 1. [Register an Application in Azure Active Directory](#register-an-application-in-azure-active-directory)
 2. [Create SharePoint Online Custom Lists](#create-sharepoint-online-lists)
-3. [Create a Power Automate flow](#create-power-automate-flow) (Under construction)
-4. or [Import the flow](#or-import-the-power-automate-flow)
+3. TODO: Create a Site Design for restricting guest access in SharePoint
+4. [Create a Power Automate flow](#create-power-automate-flow) OR [Import the flow](#or-import-the-power-automate-flow)
 5. [Create a PowerApp](#create-powerapp)
 6. [Pin the app to the sidebar in Microsoft Teams](#publish-powerapp-to-teams-and-pin)
 
@@ -40,7 +40,7 @@ This custom list is where people will submit their requests. You can certainly m
 ![Teams Requests list settings](Images/List-TeamsRequests-Settings.gif)
 
 ## Create Power Automate flow
-*Or you can import the flow in the [step after this](#or-import-the-power-automate-flow) and update the various actions*
+*Or you can import the flow in the [step after this](#or-import-the-power-automate-flow) and update the various actions. I recommend importing the flow with some emporary name, then creating a new flow that will be the real one, so you can follow along and copy/paste things from the imported flow.*
 
 1. Browse to https://flow.microsoft.com
 
@@ -67,8 +67,12 @@ if(triggerBody()?['AllowGuests'], 'True', 'False')
 
 ![Flow: set variables](Images/Flow-2-Variables.png)
 
-8. Add a new step using the `HTTP [HTTP]` action
-- The is the first of several HTTP calls. This one will get the bearer token we need to call the Graph later.
+
+*Note: this would be a good point in the flow to trigger an Approval if Guest Access is requested, if this meets your business needs. Just add a `Condition` to check if `AllowGuests` is `true`, adding the relevant Approval actions in the `True` path, with all that follows coming after the `Condition` action.*
+
+
+
+8. Add a new step using the `HTTP [HTTP]` action. The is the first of several HTTP calls. This one will get the bearer token we need to call the Graph later.
 
 Method: POST
 
@@ -149,10 +153,189 @@ Body:
 
 ![Flow: clone team](Images/Flow-7-Clone.png)
 
-TODO: finish these instructions (I'm working on it)
+13. Add a new step using the `Parse JSON [Data Operations]` action, seeting the Content to the `Clone Team` action `Headers` and the following schema. Here we go, let's create the team.
 
-13. 
+Content: @{outputs('Clone_Team')['headers']}
 
+Schema:
+```
+{
+    "type": "object",
+    "properties": {
+        "Transfer-Encoding": {
+            "type": "string"
+        },
+        "request-id": {
+            "type": "string"
+        },
+        "client-request-id": {
+            "type": "string"
+        },
+        "x-ms-ags-diagnostic": {
+            "type": "string"
+        },
+        "Duration": {
+            "type": "string"
+        },
+        "Strict-Transport-Security": {
+            "type": "string"
+        },
+        "Cache-Control": {
+            "type": "string"
+        },
+        "Date": {
+            "type": "string"
+        },
+        "Location": {
+            "type": "string"
+        },
+        "Content-Type": {
+            "type": "string"
+        },
+        "Content-Length": {
+            "type": "string"
+        }
+    }
+}
+```
+![Flow: parse json](Images/Flow-8-Parse.png)
+
+14. Add a `Compose [Data Operations]` action, setting the inputs to the expression: ```substring(body('Parse_JSON_of_response')?['Location'], 8, 36)```. This will get the ID of the Team we just created to use later.
+
+![Flow: parse json](Images/Flow-9-Compose.png)
+
+15. Add a `Do until [Control]` action for when the TeamCreationCompleted variable is equals to true. This is where we confirm that the Clone Team operation has completed successfully. Count: `10`. Timeout: `PT45S`. Check out [this blog post](https://www.o365recipes.com/microsoft-flow-and-the-infamous-do-until-loop/) to understand how the values in the Do Unti action work.
+
+![Flow: do until](Images/Flow-10-DoUntil.png)
+
+16. Inside the Do until action: add a `Delay [Schedule]` action for 45 seconds
+
+![Flow: delay](Images/Flow-11-Delay.png)
+
+17. Inside the Do until action: add a `HTTP [HTTP]` to check if the operation completed using the Location value returned to us in the Clone action
+
+Method: `GET`
+
+URI: `https://graph.microsoft.com/v1.0@{body('Parse_JSON_of_response')?['Location']}`
+
+![Flow: clone check](Images/Flow-12-CloneCheck.png)
+
+18. Inside the Do until action: add a `Parse JSON [Data Operations]` to parse the `Body` of the HTTP call
+
+Content: ```@{body('Check_if_clone_operation_is_complete')}```
+Schema: 
+```
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "operationType": {
+            "type": "string"
+        },
+        "createdDateTime": {
+            "type": "string"
+        },
+        "status": {
+            "type": "string"
+        },
+        "lastActionDateTime": {
+            "type": "string"
+        },
+        "attemptsCount": {
+            "type": "integer"
+        },
+        "targetResourceId": {
+            "type": "string"
+        },
+        "targetResourceLocation": {
+            "type": "string"
+        },
+        "error": {}
+    }
+}
+```
+
+![Flow: patse json](Images/Flow-13-Parse.png)
+
+19. Inside the Do until action: add a `Set variable [Variables]` action to set `TeamCreationStatus` to the `status` from the parse action
+
+![Flow: set variable](Images/Flow-14-SetVariable.png)
+
+20. Inside the Do until action: add a `Switch [Control]` action on the `TeamCreationStatus` variable. Add Cases for `succeeded` and `failed`, setting the `TeamCreationCompleted` variable to `true` in each
+
+![Flow: delay](Images/Flow-15-Switch.png)
+
+21. AFTER the Do until action: add a `Condition [Control]` action to check if the `TeamCreationStatus` variable `is not equal to` `succeeded`. If it is, terminate and handle the failure (like send someone a message or something, which is not included in this example)
+
+![Flow: delay](Images/Flow-16-CheckFailure.png)
+
+22. Add a new step using the `HTTP [HTTP]` action (notice the space in between Bearer and the access token in the Headers) to Update the Team with the appropriate AllowGuests setting
+
+Method: POST
+
+URI: ```https://graph.microsoft.com/v1.0/groups/@{outputs('Strip_Team_ID_from_Location_Response')}/settings```
+
+Headers: Authorization: ```Bearer @{body('Parse_JSON')?['access_token']}```
+
+Body:
+```
+{
+  "displayName": "Group.Unified.Guest",
+  "templateId": "08d542b9-071f-4e16-94b0-74abb372e3d9",
+  "values": [
+    {
+      "name": "AllowToAddGuests",
+      "value": "@{variables('AllowGuests')}"
+    }
+  ]
+}
+```
+
+![Flow: allow guests](Images/Flow-17-AllowGuests.png)
+
+23. Add a new step using the `HTTP [HTTP]` action (notice the space in between Bearer and the access token in the Headers) to add the Owner to the new team
+
+Method: POST
+
+URI: ```https://graph.microsoft.com/v1.0/groups/@{outputs('Strip_Team_ID_from_Location_Response')}/owners/$ref```
+
+Headers: Authorization: ```Bearer @{body('Parse_JSON')?['access_token']}```
+
+Body: (if you get an error when saving after this, add another @ symbol in front of @odata.id)
+```
+{
+  "@odata.id": "https://graph.microsoft.com/v1.0/users/@{body('Get_Owner_ID')?['id']}"
+}
+```
+
+![Flow: owners](Images/Flow-18-Owners.png)
+
+24. Add a new step using the `HTTP [HTTP]` action (notice the space in between Bearer and the access token in the Headers) to add the Secondary Owner to the new team
+
+Method: POST
+
+URI: ```https://graph.microsoft.com/v1.0/groups/@{outputs('Strip_Team_ID_from_Location_Response')}/owners/$ref```
+
+Headers: Authorization: ```Bearer @{body('Parse_JSON')?['access_token']}```
+
+Body: (if you get an error when saving after this, add another @ symbol in front of @odata.id)
+```
+{
+  "@odata.id": "https://graph.microsoft.com/v1.0/users/@{body('Get_Secondary_Owner_ID')?['id']}"
+}
+```
+
+25. Add a `Update item [SharePoint]` action to update the TeamId field. We're done, so let's update the request item so we can track requests to teams (and maybe status). For each required field, set it to the same field from the trigger action. Set the TeamId to `@{outputs('Strip_Team_ID_from_Location_Response')}`
+
+![Flow: update item](Images/Flow-19-UpdateItem.png)
+
+25. Add a `Post a message as the Flow bot to a user (preview) [Microsoft Teams]` action to let the requester know we're all done.
+
+![Flow: notify](Images/Flow-20-Notify.png)
+
+TODO: SharePoint Online Site Design
 
 ## Or import the Power Automate Flow
 Follow this step if you want to import the flow and fix it up rather than create the flow from scratch above.
@@ -182,3 +365,5 @@ Follow this step if you want to import the flow and fix it up rather than create
 1. Add your PowerApp to Teams: https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/embed-teams-app
 2. Publish it in your tenant's app catalog: https://docs.microsoft.com/en-us/microsoftteams/tenant-apps-catalog-teams
 3. Pin your app to the sidebar in Teams: https://docs.microsoft.com/en-us/microsoftteams/teams-app-setup-policies
+
+*Note: this can take a while to show up
