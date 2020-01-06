@@ -29,13 +29,22 @@ Employees will fill out a request form in SharePoint Online (or in PowerApps, sh
 The following custom lists in SharePoint are used in the sample Flow and can be modified/omitted to fit your needs. Any alterations may require updates to get the Flow to work, depending on the change.
 ### Teams Templates
 Create teams in Microsoft Teams to act as your templates, then store references to those templates in this simple custom list to be chosen from when someone requests a new Team. This list will be used as a lookup on the Teams Requests list. You can copy/paste the TeamID from the Teams Admin Center.
+
+*Everyone that you want to be able to create teams will need `Read` access to this list.*
+
 ![TeamsTemplates list](Images/List-TeamsTemplates.gif)
 ![TeamsTemplates list settings](Images/List-TeamsTemplates-Settings.gif)
 ### Business Units
 This custom list (with no additional custom fields) is entrirely optional and just an example of the type of extra information you can collect and store to meet your governance needs. This list will be used as a lookup on the Teams Requests list. 
+
+*Everyone that you want to be able to create teams will need `Read` access to this list.*
+
 ![Business Units list](Images/List-BusinessUnits.gif)
 ### Teams Requests
 This custom list is where people will submit their requests. You can certainly make a PowerApp on top of this list for people to use.
+
+*Everyone that you want to be able to create teams will need `Write` access to this list.*
+
 ![Teams Requests list](Images/List-TeamsRequests.gif)
 ![Teams Requests list settings](Images/List-TeamsRequests-Settings.gif)
 
