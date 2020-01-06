@@ -337,6 +337,8 @@ Body: (if you get an error when saving after this, add another @ symbol in front
 
 TODO: SharePoint Online Site Design
 
+Follow Michael's instructions in his **But Let's Not Forget SharePoint** step here: https://medium.com/@michael.mukalian/automating-the-provisioning-of-selective-teams-with-guest-access-part-3-microsoft-power-automate-bae61f7a759a
+
 ## Or import the Power Automate Flow
 Follow this step if you want to import the flow and fix it up rather than create the flow from scratch above.
 
