@@ -357,7 +357,7 @@ Follow this step if you want to import the flow and fix it up rather than create
 4. Click `Open` and browse to your downloaded .msapp file
 5. Once the app opens, click `View` > `Data sources`
 6. Delete the `Teams Requests` SharePoint connection
-7. Search for `SharePoint` and add a connection to your SharePoint `Teams Requests` list (makie sure it is named the same)
+7. Search for `SharePoint` and add a connection to your SharePoint `Teams Requests` list (make sure it is named the same)
 8. Test it to make sure it is working
 9. Save and Publish it
 
