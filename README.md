@@ -43,6 +43,8 @@ This custom list (with no additional custom fields) is entrirely optional and ju
 ### Teams Requests
 This custom list is where people will submit their requests. You can certainly make a PowerApp on top of this list for people to use.
 
+`Visibility` choice options: `Public`, `Private`
+
 *Everyone that you want to be able to create teams will need `Write` access to this list.*
 
 ![Teams Requests list](Images/List-TeamsRequests.gif)
@@ -141,7 +143,7 @@ Schema:
 
 ![Flow: get template](Images/Flow-6-Template.png)
 
-12. Add a new step using the `HTTP [HTTP]` action (notice the space in between Bearer and the access token in the Headers)
+12. Add a new step using the `HTTP [HTTP]` action (notice the space in between Bearer and the access token in the Headers). Here we go, let's create the team. The Teams clone operation has some idiosyncracies, so I suggest you check out Laura Kokkarinen's blog series on configuring tabs and cloning to understand this better: https://laurakokkarinen.com/cloning-teams-and-configuring-tabs-via-microsoft-graph-cloning-a-team/
 
 Method: Post
 
@@ -162,7 +164,7 @@ Body:
 
 ![Flow: clone team](Images/Flow-7-Clone.png)
 
-13. Add a new step using the `Parse JSON [Data Operations]` action, seeting the Content to the `Clone Team` action `Headers` and the following schema. Here we go, let's create the team.
+13. Add a new step using the `Parse JSON [Data Operations]` action, seeting the Content to the `Clone Team` action `Headers` and the following schema.
 
 Content: @{outputs('Clone_Team')['headers']}
 
@@ -266,7 +268,7 @@ Schema:
 }
 ```
 
-![Flow: patse json](Images/Flow-13-Parse.png)
+![Flow: parse json](Images/Flow-13-Parse.png)
 
 19. Inside the Do until action: add a `Set variable [Variables]` action to set `TeamCreationStatus` to the `status` from the parse action
 
@@ -336,7 +338,7 @@ Body: (if you get an error when saving after this, add another @ symbol in front
 }
 ```
 
-25. Add a `Update item [SharePoint]` action to update the TeamId field. We're done, so let's update the request item so we can track requests to teams (and maybe status). For each required field, set it to the same field from the trigger action. Set the TeamId to `@{outputs('Strip_Team_ID_from_Location_Response')}`
+25. Add a `Update item [SharePoint]` action to update the TeamId field. We're done, so let's update the request item so we can track requests to teams (and maybe status). For each required field, set it to the same field from the **trigger** action (the SharePoint "When an item is created" action). Set the TeamId to `@{outputs('Strip_Team_ID_from_Location_Response')}`
 
 ![Flow: update item](Images/Flow-19-UpdateItem.png)
 
